@@ -1,0 +1,34 @@
+/* App.css */
+:root {
+  --sidebar-width: 56px;
+}
+
+.sidebar-expanded {
+  --sidebar-width: 220px;
+}
+
+/* Chat specific styles */
+.chat header.chat::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Global utility classes */
+.w-115 {
+  width: 460px;
+}
+
+.h-45 {
+  height: 180px;
+}
+
+.w-55 {
+  width: 220px;
+} 

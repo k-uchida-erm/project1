@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==== Global Header Reset ==== */
+/*
+header {
+  all: unset;
+  display: contents;
+}
+*/
+
+/* ==== CSS Variables for Sidebar Width ==== */
+:root {
+  --sidebar-width: 80px;  /* Default collapsed width from w-20 */
+  --side-gap: clamp(24px, 7vw, 140px);
+}
+
+.sidebar-expanded {
+  --sidebar-width: 256px; /* Expanded width from w-64 */
+}
+
+/* ==== Page Title Common Styles ==== */
+.page-body {
+  padding-left:  var(--side-gap);
+  padding-right: var(--side-gap);
+  padding-top:   64px; /* Fixed header height from h-16 */
+  height: 100vh;
+  margin-left: var(--sidebar-width);
+  transition: margin-left 300ms ease-in-out;
+}
+
+.page-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1400px; /* コンテンツが広がりすぎないように最大幅を設定 */
+  height: 80vh; /* Reduced height to make space for title */
+  display: flex;
+  gap: clamp(24px, 3vw, 56px);
+  margin-top: 5vh; /* Push content down from title */
+  padding-left: clamp(24px, 20vw - 120px, 140px); /* 可変の余白 */
+  padding-right: clamp(24px, 20vw - 120px, 140px); /* 可変の余白 */
+  box-sizing: border-box; /* パディングを幅に含める */
+}
+
+.left-panel {
+  flex: 5 1 0;
+  background-color: white;
+  border-radius: 1rem;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.right-panel {
+  flex: 2 1 0;
+  min-width: 240px;
+  max-width: 420px;
+  background-color: white;
+  border-radius: 1rem;
+  border: 1px solid rgb(226 232 240 / 0.5);
+  overflow: hidden;
+  box-shadow: -4px 0 16px rgba(0,0,0,.08); /* Stronger shadow */
+}
+
+/* This class is no longer used as header styling is now co-located
+   within the Header component itself. */
+/*
+.page-title {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 6vh;
+  left: 20vw;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b; 
+  z-index: 20;
+}
+*/
+
+@media (max-width: 860px) {
+  .main-content {
+    flex-direction: column;
+    width: 95vw;
+    height: 95vh;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .right-panel {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 300px;
+  }
+  /*
+  .page-title {
+    left: 2.5vw;
+  }
+  */
+}
+
+/* ==== Chat Utility Pane Ultra-Soft Shadow ==== */
+.chat .utility-pane {
+  box-shadow: -1px 0 4px rgba(0,0,0,0.06);   /* Slightly stronger: blur 4px, alpha 0.06 */
+}
+
+/* ===== Chat Area Top Padding ===== */
+.chat-wrapper {
+  padding-top: 32px;          /* Prevent messages from sticking to top edge */
+}
+
+/* ===== Cloud Fade Header Effect ===== */
+header.chat {
+  position: relative;         /* Required for pseudo-element positioning */
+}
+
+/* Cloud fade pseudo-element */
+header.chat::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;               /* Slight overlap to eliminate seams */
+  height: 36px;               /* Fade range - adjustable */
+  pointer-events: none;
+  /* Soft cloud-like gradient fade */
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,1) 0%,
+    rgba(255,255,255,0.65) 35%,
+    rgba(255,255,255,0.35) 65%,
+    rgba(255,255,255,0) 100%
+  );
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
