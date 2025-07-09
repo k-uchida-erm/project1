@@ -14,10 +14,24 @@ header {
 :root {
   --sidebar-width: 80px;  /* Default collapsed width from w-20 */
   --side-gap: clamp(24px, 7vw, 140px);
+  --content-left-offset: calc(var(--sidebar-width) + var(--side-gap)); /* サイドバー幅 + 余白 */
 }
 
 .sidebar-expanded {
   --sidebar-width: 256px; /* Expanded width from w-64 */
+}
+
+/* レスポンシブ対応：モバイル時はサイドバー幅を常に0に（オーバーレイ表示） */
+@media (max-width: 1279px) {
+  :root {
+    --sidebar-width: 0px !important; /* 強制的に0に設定 */
+    --side-gap: clamp(16px, 5vw, 32px); /* モバイル時は左右均等の余白 */
+    --content-left-offset: var(--side-gap); /* モバイル時は左右均等 */
+  }
+  
+  .sidebar-expanded {
+    --sidebar-width: 0px !important; /* 展開時も0に設定 */
+  }
 }
 
 /* ==== Page Title Common Styles ==== */
@@ -45,7 +59,7 @@ header {
   display: flex;
   gap: clamp(24px, 3vw, 56px);
   margin-top: 5vh; /* Push content down from title */
-  padding-left: clamp(24px, 20vw - 120px, 140px); /* 可変の余白 */
+  padding-left: var(--content-left-offset); /* 統一された左端位置 */
   padding-right: clamp(24px, 20vw - 120px, 140px); /* 可変の余白 */
   box-sizing: border-box; /* パディングを幅に含める */
 }

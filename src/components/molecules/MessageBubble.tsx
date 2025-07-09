@@ -1,11 +1,8 @@
 import React from 'react';
 import { Message } from '../../types';
+import { MessageBubbleProps } from '../../types/components';
 
-interface MessageBubbleProps {
-  message: Message;
-}
-
-const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
+const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLastInGroup = false }) => {
   return (
     <div className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
       <div

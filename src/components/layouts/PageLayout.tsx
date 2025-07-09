@@ -1,22 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import Sidebar from '../Sidebar';
 import Header from '../Header';
-
-interface PageLayoutProps {
-  children: ReactNode;
-  title: string;
-  onClose: () => void;
-  onBack?: () => void;
-  showBackButton?: boolean;
-  onSave?: () => void;
-  showSaveButton?: boolean;
-  sidebarExpanded: boolean;
-  onSidebarMouseEnter: () => void;
-  onSidebarMouseLeave: () => void;
-  onNavigateToDashboard?: () => void;
-  onNavigateToDocuments?: () => void;
-  showCloseButton?: boolean;
-}
+import { PageLayoutProps } from '../../types/components';
 
 const PageLayout: React.FC<PageLayoutProps> = ({
   children,
@@ -31,10 +16,22 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   onSidebarMouseLeave,
   onNavigateToDashboard,
   onNavigateToDocuments,
-  showCloseButton = true
+  showCloseButton = true,
+  isDashboard = false
 }) => {
+  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+
   return (
     <div className={`h-screen bg-slate-100 overflow-hidden font-['Noto_Sans',sans-serif] text-sm leading-relaxed ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
+      {/* 白背景オーバーレイ */}
+      <div 
+        className="fixed inset-0 bg-white"
+        style={isDashboard ? {
+          backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.08) 1.5px, transparent 1.5px)`,
+          backgroundSize: '18px 18px'
+        } : {}}
+      ></div>
+      
       {/* Sidebar */}
       <Sidebar 
         expanded={sidebarExpanded}
@@ -42,6 +39,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         onMouseLeave={onSidebarMouseLeave}
         onNavigateToDashboard={onNavigateToDashboard}
         onNavigateToDocuments={onNavigateToDocuments}
+        mobileVisible={mobileMenuVisible}
+        onMobileClose={() => setMobileMenuVisible(false)}
       />
 
       {/* Header */}
@@ -53,10 +52,11 @@ const PageLayout: React.FC<PageLayoutProps> = ({
         onSave={onSave}
         showSaveButton={showSaveButton}
         showCloseButton={showCloseButton}
+        onMenuClick={() => setMobileMenuVisible(true)}
       />
 
       {/* Main Content */}
-      <div className="fixed inset-0" style={{ top: '58px', height: 'calc(100vh - 58px)', left: '80px' }}>
+      <div className="relative z-10 fixed inset-0" style={{ top: '64px', height: 'calc(100vh - 64px)', paddingLeft: 'var(--content-left-offset)', paddingRight: 'var(--content-left-offset)' }}>
         {children}
       </div>
     </div>

@@ -1,20 +1,14 @@
-import React from 'react';
-import { ArrowUp } from 'lucide-react';
+import React, { useState } from 'react';
 import Input from '../atoms/Input';
-import Button from '../atoms/Button';
-
-interface MessageInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSend: () => void;
-  onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}
+import SendButton from '../atoms/SendButton';
+import { MessageInputProps } from '../../types/components';
 
 const MessageInput: React.FC<MessageInputProps> = ({
   value,
   onChange,
   onSend,
-  onKeyPress
+  onKeyPress,
+  isLoading = false
 }) => {
   return (
     <div className="pt-4 px-4 pb-2 relative z-10 mt-auto">
@@ -27,13 +21,11 @@ const MessageInput: React.FC<MessageInputProps> = ({
             placeholder="Type a message…"
             className="flex-1 bg-transparent text-slate-800 placeholder-slate-500"
           />
-          <Button
+          <SendButton
             onClick={onSend}
-            variant="ghost"
-            className="p-2 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50"
-          >
-            <ArrowUp size={16} strokeWidth={1.5} className="text-slate-700" />
-          </Button>
+            disabled={!value.trim()}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </div>

@@ -1,17 +1,7 @@
 import React from 'react';
 import { ChevronLeft, Brain, ChevronRight } from 'lucide-react';
 import Button from '../atoms/Button';
-
-interface RightPanelProps {
-  currentStep: number;
-  selectedMode: string;
-  detailLevel: number;
-  onStepChange: (step: number) => void;
-  onModeChange: (mode: string) => void;
-  onDetailLevelChange: (level: number) => void;
-  onMindMap: () => void;
-  onNext: () => void;
-}
+import { RightPanelProps } from '../../types/components';
 
 const RightPanel: React.FC<RightPanelProps> = ({
   currentStep,

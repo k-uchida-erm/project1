@@ -1,14 +1,5 @@
 import React from 'react';
-
-interface InputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  className?: string;
-  type?: string;
-  disabled?: boolean;
-}
+import { InputProps } from '../../types/components';
 
 const Input: React.FC<InputProps> = ({
   value,

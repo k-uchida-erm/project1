@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Message } from '../../types';
+import { MessageListProps } from '../../types/components';
 import MessageBubble from '../molecules/MessageBubble';
 
-interface MessageListProps {
-  messages: Message[];
-}
-
-const MessageList: React.FC<MessageListProps> = ({ messages }) => {
+const MessageList: React.FC<MessageListProps> = ({ messages, isLoading = false }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

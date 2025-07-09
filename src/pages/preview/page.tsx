@@ -1,25 +1,64 @@
 import React, { useState } from 'react';
 import PageLayout from '../../components/layouts/PageLayout';
+import { StickyNote } from '../../types';
+import { PreviewPageProps } from '../../types/pages';
 
-interface PreviewPageProps {
-  onClose: () => void;
-  onReturnToChat: () => void;
-  onSaveToDocuments: () => void;
-}
-
-const PreviewPage: React.FC<PreviewPageProps> = ({ onClose, onReturnToChat, onSaveToDocuments }) => {
+const PreviewPage: React.FC<PreviewPageProps> = ({ selectedNote, onBack, generatedSpecification }) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   const handleSave = () => {
-    onSaveToDocuments();
+    console.log('Save to documents');
+  };
+
+  const renderGeneratedSpecification = () => {
+    if (!generatedSpecification) return null;
+
+    return (
+      <div className="w-full py-8" style={{ 
+        maxWidth: 'min(90%, 800px)',
+        margin: '0 auto'
+      }}>
+        <div className="min-h-screen">
+          {/* Document Title */}
+          <div className="pb-6">
+            <h1 className="text-4xl font-bold mb-4 text-slate-800">
+              {generatedSpecification.title}
+            </h1>
+            <div className="flex items-center space-x-4 text-sm text-slate-500 mb-6">
+              <span>モード: {generatedSpecification.mode}</span>
+              <span>詳細レベル: {generatedSpecification.detailLevel}/5</span>
+              <span>作成日: {generatedSpecification.createdAt.toLocaleDateString('ja-JP')}</span>
+            </div>
+          </div>
+          
+          {/* Generated Content */}
+          <div className="prose prose-slate max-w-none">
+            <div 
+              className="text-slate-700 leading-relaxed whitespace-pre-line"
+              dangerouslySetInnerHTML={{ 
+                __html: generatedSpecification.content
+                  .replace(/^# /gm, '<h1 class="text-3xl font-bold mb-4 mt-8 text-slate-800">')
+                  .replace(/^## /gm, '<h2 class="text-2xl font-semibold mb-3 mt-6 text-slate-800">')
+                  .replace(/^### /gm, '<h3 class="text-xl font-medium mb-2 mt-4 text-slate-800">')
+                  .replace(/^- /gm, '<li class="ml-4 mb-1">')
+                  .replace(/^\d+\. /gm, '<li class="ml-4 mb-1 list-decimal">')
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   };
 
   const renderDocumentView = () => {
     return (
-      <div className="max-w-4xl mx-auto py-8">
+      <div className="w-full py-8" style={{ 
+        maxWidth: 'min(90%, 800px)',
+        margin: '0 auto'
+      }}>
         <div className="min-h-screen">
           {/* Document Title */}
-          <div className="p-8 pb-4">
+          <div className="pb-4">
             <input
               type="text"
               defaultValue="Untitled Document"
@@ -29,7 +68,7 @@ const PreviewPage: React.FC<PreviewPageProps> = ({ onClose, onReturnToChat, onSa
           </div>
           
           {/* Document Content - Notion-style blocks */}
-          <div className="space-y-6 px-8 pb-8">
+          <div className="space-y-6 pb-8">
             <div className="group">
               <div 
                 contentEditable
@@ -115,18 +154,19 @@ const PreviewPage: React.FC<PreviewPageProps> = ({ onClose, onReturnToChat, onSa
   return (
     <PageLayout
       title="Preview"
-      onClose={onClose}
-      onBack={onReturnToChat}
+      onClose={() => console.log('Close')}
+      onBack={onBack}
       showBackButton={true}
       onSave={handleSave}
       showSaveButton={true}
       sidebarExpanded={sidebarExpanded}
       onSidebarMouseEnter={() => setSidebarExpanded(true)}
       onSidebarMouseLeave={() => setSidebarExpanded(false)}
-      onNavigateToDocuments={onSaveToDocuments}
     >
-      <main className="h-full overflow-y-auto bg-white">
-        {renderDocumentView()}
+      {/* 白背景オーバーレイ */}
+      <div className="fixed inset-0 bg-white"></div>
+      <main className="h-full overflow-y-auto bg-white relative z-10">
+        {generatedSpecification ? renderGeneratedSpecification() : renderDocumentView()}
       </main>
     </PageLayout>
   );

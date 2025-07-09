@@ -5,9 +5,10 @@ import { StickyNote } from '../../types';
 interface MobilePageProps {
   onNavigateToChat: (note: StickyNote) => void;
   onNavigateToDocuments: () => void;
+  onNavigateToMindMap: (note: StickyNote) => void;
 }
 
-const MobilePage: React.FC<MobilePageProps> = ({ onNavigateToChat, onNavigateToDocuments }) => {
+const MobilePage: React.FC<MobilePageProps> = ({ onNavigateToChat, onNavigateToDocuments, onNavigateToMindMap }) => {
   const [stickyNotes, setStickyNotes] = useState<StickyNote[]>([]);
   const [editingNote, setEditingNote] = useState<string | null>(null);
 
@@ -37,7 +38,7 @@ const MobilePage: React.FC<MobilePageProps> = ({ onNavigateToChat, onNavigateToD
     if (action === 'chat') {
       onNavigateToChat(note);
     } else if (action === 'mindmap') {
-      // TODO: Implement Mind Map functionality
+      onNavigateToMindMap(note);
     }
   };
 

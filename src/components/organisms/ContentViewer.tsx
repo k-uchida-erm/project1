@@ -1,11 +1,7 @@
 import React from 'react';
-import { ViewMode } from '../../types';
+import { ContentViewerProps } from '../../types/components';
 
-interface ContentViewerProps {
-  currentView: ViewMode;
-}
-
-const ContentViewer: React.FC<ContentViewerProps> = ({ currentView }) => {
+const ContentViewer: React.FC<ContentViewerProps> = ({ content, mode }) => {
   const renderDocumentView = () => {
     return (
       <div className="max-w-4xl mx-auto py-8">
@@ -177,9 +173,9 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ currentView }) => {
 
   return (
     <div className="overflow-hidden pt-3 px-8" style={{ height: 'calc(100vh - 220px)' }}>
-      {currentView === 'Document' && renderDocumentView()}
-      {currentView === 'Mind map' && renderMindMapView()}
-      {currentView === 'Diagram' && renderDiagramView()}
+      {mode === 'Document' && renderDocumentView()}
+      {mode === 'Mind map' && renderMindMapView()}
+      {mode === 'Diagram' && renderDiagramView()}
     </div>
   );
 };

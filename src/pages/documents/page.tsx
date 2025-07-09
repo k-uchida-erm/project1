@@ -1,93 +1,87 @@
 import React, { useState } from 'react';
-import { FileText, Plus, Eye, Edit3, Trash2 } from 'lucide-react';
+import { Search, FileText, MoreVertical, Trash2, Download, Share2, Edit3, Filter, Plus, Eye } from 'lucide-react';
+import PageLayout from '../../components/layouts/PageLayout';
+import { DocumentsPageProps } from '../../types/pages';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Button from '../../components/atoms/Button';
+import { useDocuments } from '../../hooks/useDocuments';
 
-interface DocumentsPageProps {
-  onClose: () => void;
-  onNavigateToPreview: (docId: string) => void;
-  onBackToDashboard: () => void;
-}
-
-interface Document {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const DocumentsPage: React.FC<DocumentsPageProps> = ({ onClose, onNavigateToPreview, onBackToDashboard }) => {
+const DocumentsPage: React.FC<DocumentsPageProps> = ({ onBack, onNavigateToPreview }) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-  const [documents, setDocuments] = useState<Document[]>([
-    {
-      id: '1',
-      title: 'Sample Document',
-      content: 'This is a sample document content...',
-      createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-20')
-    },
-    {
-      id: '2',
-      title: 'Project Proposal',
-      content: 'Project proposal document with detailed specifications...',
-      createdAt: new Date('2024-01-10'),
-      updatedAt: new Date('2024-01-18')
-    },
-    {
-      id: '3',
-      title: 'Meeting Notes',
-      content: 'Notes from the team meeting on project progress...',
-      createdAt: new Date('2024-01-08'),
-      updatedAt: new Date('2024-01-16')
-    }
-  ]);
+  const [mobileMenuVisible, setMobileMenuVisible] = useState(false);
+  const { documents, loading, error, createDocument, deleteDocument } = useDocuments();
 
-  const handleCreateNew = () => {
-    const newDoc: Document = {
-      id: Date.now().toString(),
-      title: 'Untitled Document',
-      content: '',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    setDocuments(prev => [newDoc, ...prev]);
+  const handleCreateNew = async () => {
+    try {
+      await createDocument({
+        title: 'Untitled Document',
+        content: ''
+      });
+    } catch (err) {
+      console.error('Failed to create document:', err);
+    }
   };
 
-  const handleDeleteDocument = (docId: string) => {
-    setDocuments(prev => prev.filter(doc => doc.id !== docId));
+  const handleDeleteDocument = async (docId: string) => {
+    try {
+      await deleteDocument(docId);
+    } catch (err) {
+      console.error('Failed to delete document:', err);
+    }
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
       month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+      day: 'numeric'
     });
   };
 
+  if (loading) {
+    return (
+      <div className="h-screen bg-white flex items-center justify-center">
+        <div className="text-slate-600">データを読み込み中...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen bg-white flex items-center justify-center">
+        <div className="text-red-600">エラー: {error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className={`h-screen bg-gradient-to-br from-slate-100 via-blue-50/40 to-indigo-100/60 overflow-hidden font-['Noto_Sans',sans-serif] text-sm leading-relaxed ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
+      {/* 白背景オーバーレイ */}
+      <div className="fixed inset-0 bg-white"></div>
+      
       {/* Sidebar */}
       <Sidebar 
         expanded={sidebarExpanded}
         onMouseEnter={() => setSidebarExpanded(true)}
         onMouseLeave={() => setSidebarExpanded(false)}
-        onNavigateToDashboard={onBackToDashboard}
+        onNavigateToDashboard={onBack}
         onNavigateToDocuments={() => {}}
+        mobileVisible={mobileMenuVisible}
+        onMobileClose={() => setMobileMenuVisible(false)}
       />
 
       {/* Header */}
       <Header 
         title="Documents"
-        onClose={onClose}
-        onBack={onBackToDashboard}
+        onClose={() => {}}
+        onBack={onBack}
         showBackButton={true}
+        onMenuClick={() => setMobileMenuVisible(true)}
       />
 
       {/* Main Content */}
-      <div className="fixed inset-0" style={{ top: '56px', height: 'calc(100vh - 56px)', left: '80px' }}>
+      <div className="relative z-10 fixed inset-0" style={{ top: '64px', height: 'calc(100vh - 64px)', paddingLeft: 'var(--content-left-offset)', paddingRight: 'var(--content-left-offset)' }}>
         <div className="w-full h-full overflow-y-auto p-8">
           {/* Header with Create Button */}
           <div className="flex justify-between items-center mb-8">
@@ -134,7 +128,9 @@ const DocumentsPage: React.FC<DocumentsPageProps> = ({ onClose, onNavigateToPrev
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        onNavigateToPreview(doc.id);
+                        if (onNavigateToPreview) {
+                          onNavigateToPreview(doc.id);
+                        }
                       }}
                       className="p-2 hover:bg-blue-100/60 rounded-lg transition-all duration-200 border border-transparent hover:border-blue-200/50"
                       title="View"

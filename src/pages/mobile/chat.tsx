@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Send, Cpu, FileText, Plus } from 'lucide-react';
+import { Send, Cpu, FileText, Plus } from 'lucide-react';
 import { Message } from '../../types';
+import MobileBackButton from '../../components/atoms/MobileBackButton';
+import MobileCloseButton from '../../components/atoms/MobileCloseButton';
 
 interface MobileChatPageProps {
   memoTitle: string;
@@ -8,6 +10,7 @@ interface MobileChatPageProps {
   onGoToPreview: () => void;
   onBack?: () => void;
   showBackButton?: boolean;
+  onNavigateToMindMap?: () => void;
 }
 
 const MobileChatPage: React.FC<MobileChatPageProps> = ({ 
@@ -15,7 +18,8 @@ const MobileChatPage: React.FC<MobileChatPageProps> = ({
   onClose, 
   onGoToPreview, 
   onBack, 
-  showBackButton = false 
+  showBackButton = false,
+  onNavigateToMindMap
 }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -74,18 +78,19 @@ const MobileChatPage: React.FC<MobileChatPageProps> = ({
     'Strategy planning'
   ];
 
+  const handleMindMapClick = () => {
+    if (onNavigateToMindMap) {
+      onNavigateToMindMap();
+    }
+  };
+
   return (
     <div className="h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex flex-col">
       {/* Header */}
       <div className="bg-white/90 backdrop-blur-md border-b border-slate-200/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {showBackButton && onBack && (
-            <button
-              onClick={onBack}
-              className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
-            >
-              <ArrowLeft size={20} className="text-slate-600" />
-            </button>
+            <MobileBackButton onClick={onBack} />
           )}
           <div>
             <h1 className="text-lg font-semibold text-slate-800">{memoTitle}</h1>
@@ -99,12 +104,7 @@ const MobileChatPage: React.FC<MobileChatPageProps> = ({
           >
             <Cpu size={20} className="text-slate-600" />
           </button>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
-          >
-            ✕
-          </button>
+          <MobileCloseButton onClick={onClose} />
         </div>
       </div>
 
@@ -171,9 +171,7 @@ const MobileChatPage: React.FC<MobileChatPageProps> = ({
       <div className="px-4 py-3 bg-white/90 backdrop-blur-sm border-t border-slate-200/50">
         <div className="flex space-x-2 mb-3">
           <button
-            onClick={() => {
-              // TODO: Implement Mind Map functionality
-            }}
+            onClick={handleMindMapClick}
             className="flex-1 flex items-center justify-center space-x-2 py-3 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 text-purple-600 rounded-xl transition-all duration-200"
           >
             <Plus size={16} />

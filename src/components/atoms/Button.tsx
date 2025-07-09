@@ -1,13 +1,5 @@
 import React from 'react';
-
-interface ButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-  disabled?: boolean;
-}
+import { ButtonProps } from '../../types/components';
 
 const Button: React.FC<ButtonProps> = ({ 
   children, 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Save, Type, List, AlignLeft, Plus } from 'lucide-react';
+import { Save, Type, List, AlignLeft, Plus } from 'lucide-react';
+import MobileBackButton from '../../components/atoms/MobileBackButton';
+import MobileCloseButton from '../../components/atoms/MobileCloseButton';
 
 interface MobilePreviewPageProps {
   onClose: () => void;
@@ -120,12 +122,7 @@ const MobilePreviewPage: React.FC<MobilePreviewPageProps> = ({
       {/* Header */}
       <div className="bg-white/90 backdrop-blur-md border-b border-slate-200/50 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <button
-            onClick={onReturnToChat}
-            className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
-          >
-            <ArrowLeft size={20} className="text-slate-600" />
-          </button>
+          <MobileBackButton onClick={onReturnToChat} />
           <div>
             <h1 className="text-lg font-semibold text-slate-800">Preview</h1>
             <p className="text-sm text-slate-500">Edit & Save</p>
@@ -139,12 +136,7 @@ const MobilePreviewPage: React.FC<MobilePreviewPageProps> = ({
             <Save size={16} />
             <span>Save</span>
           </button>
-          <button
-            onClick={onClose}
-            className="p-2 rounded-xl hover:bg-slate-100 transition-colors"
-          >
-            ✕
-          </button>
+          <MobileCloseButton onClick={onClose} />
         </div>
       </div>
 

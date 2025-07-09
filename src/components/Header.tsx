@@ -1,16 +1,10 @@
 import React from 'react';
-import { X, ChevronLeft, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
+import { HeaderProps } from '../types/components';
 import Button from './atoms/Button';
-
-interface HeaderProps {
-  title: string;
-  onClose: () => void;
-  onBack?: () => void;
-  showBackButton?: boolean;
-  onSave?: () => void;
-  showSaveButton?: boolean;
-  showCloseButton?: boolean;
-}
+import BackButton from './atoms/BackButton';
+import CloseButton from './atoms/CloseButton';
+import MenuButton from './atoms/MenuButton';
 
 const Header: React.FC<HeaderProps> = ({ 
   title, 
@@ -19,23 +13,21 @@ const Header: React.FC<HeaderProps> = ({
   showBackButton = false,
   onSave,
   showSaveButton = false,
-  showCloseButton = true
+  showCloseButton = true,
+  onMenuClick
 }) => {
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-sm border-b border-slate-200/60 z-20" style={{ paddingLeft: 'var(--sidebar-width)', transition: 'padding-left 300ms ease-in-out' }}>
-      <div className="flex items-center justify-between h-full w-full" style={{ paddingLeft: 'var(--side-gap)', paddingRight: 'var(--side-gap)' }}>
+    <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-sm border-b border-slate-200/60 z-20">
+      <div className="flex items-center justify-between h-full w-full" style={{ paddingLeft: 'var(--content-left-offset)', paddingRight: 'var(--content-left-offset)' }}>
         <div className="flex items-center">
+          {/* モバイル用メニューボタン */}
+          {onMenuClick && (
+            <MenuButton onClick={onMenuClick} />
+          )}
           {showBackButton && onBack && (
-            <button
-              onClick={onBack}
-              className="p-1 mr-3 hover:bg-slate-200/50 rounded-md transition-all duration-200"
-            >
-              <ChevronLeft size={22} strokeWidth={2} className="text-slate-600" />
-            </button>
+            <BackButton onClick={onBack} />
           )}
-          {title !== 'Dashboard' && (
-            <span className="text-xl font-semibold text-slate-800">{title}</span>
-          )}
+          <span className="text-xl font-semibold text-slate-800">{title}</span>
         </div>
         
         {/* Right side buttons */}
@@ -51,12 +43,7 @@ const Header: React.FC<HeaderProps> = ({
             </Button>
           )}
           {showCloseButton && (
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-100/60 rounded-lg transition-all duration-200 border border-transparent hover:border-slate-200/50"
-            >
-              <X size={20} strokeWidth={1.5} className="text-slate-700" />
-            </button>
+            <CloseButton onClick={onClose} />
           )}
         </div>
       </div>
