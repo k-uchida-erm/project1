@@ -23,9 +23,9 @@ const PageLayout: React.FC<PageLayoutProps> = ({
 
   return (
     <div className={`h-screen bg-slate-100 overflow-hidden font-['Noto_Sans',sans-serif] text-sm leading-relaxed ${sidebarExpanded ? 'sidebar-expanded' : ''}`}>
-      {/* 白背景オーバーレイ */}
+      {/* 背景オーバーレイ */}
       <div 
-        className="fixed inset-0 bg-white"
+        className={isDashboard ? "fixed inset-0 bg-blue-50" : "fixed inset-0 bg-white"}
         style={isDashboard ? {
           backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.08) 1.5px, transparent 1.5px)`,
           backgroundSize: '18px 18px'

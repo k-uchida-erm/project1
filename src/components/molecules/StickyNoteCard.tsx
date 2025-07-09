@@ -56,8 +56,12 @@ const StickyNoteCard: React.FC<StickyNoteCardProps> = ({
       <StickyNoteDeleteButton onDelete={onDelete} />
 
       <div className="p-3 h-full flex flex-col">
-        <h3 className="font-semibold text-slate-800 text-sm mb-2 truncate">{note.title}</h3>
-        <p className="text-slate-700 text-xs flex-1 overflow-hidden">{note.content}</p>
+        <h3 className="font-semibold text-slate-800 text-sm mb-2 truncate">
+          {note.title || <span className="text-slate-400 italic">Untitled</span>}
+        </h3>
+        <p className="text-slate-700 text-xs flex-1 overflow-hidden">
+          {note.content || <span className="text-slate-400 italic">Click to edit...</span>}
+        </p>
       </div>
       
       <StickyNoteActionBar

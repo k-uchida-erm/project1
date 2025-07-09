@@ -22,6 +22,7 @@ export interface ChatPageProps {
   onBack: () => void;
   onNavigateToPreview: (specification?: GeneratedSpecification) => void;
   onNavigateToMindMap: (note: StickyNote) => void;
+  onNavigateToDocuments: () => void;
 }
 
 export interface MindMapPageProps {

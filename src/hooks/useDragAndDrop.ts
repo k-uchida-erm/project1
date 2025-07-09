@@ -55,8 +55,8 @@ export const useDragAndDrop = ({ stickyNotes, updateStickyNote }: UseDragAndDrop
     }
     
     const rect = canvasRef.current.getBoundingClientRect();
-    const x = Math.max(0, Math.min(e.clientX - rect.left - dragOffset.x, rect.width - 160));
-    const y = Math.max(0, Math.min(e.clientY - rect.top - dragOffset.y, rect.height - 160));
+    const x = Math.round(Math.max(0, Math.min(e.clientX - rect.left - dragOffset.x, rect.width - 160)));
+    const y = Math.round(Math.max(0, Math.min(e.clientY - rect.top - dragOffset.y, rect.height - 160)));
     
     // 直接DOM操作でスムーズな移動
     const noteElement = document.querySelector(`[data-note-id="${draggedNote}"]`) as HTMLElement;
@@ -105,8 +105,8 @@ export const useDragAndDrop = ({ stickyNotes, updateStickyNote }: UseDragAndDrop
       }
       
       const rect = canvasRef.current.getBoundingClientRect();
-      const x = Math.max(0, Math.min(e.clientX - rect.left - dragOffset.x, rect.width - 160));
-      const y = Math.max(0, Math.min(e.clientY - rect.top - dragOffset.y, rect.height - 160));
+      const x = Math.round(Math.max(0, Math.min(e.clientX - rect.left - dragOffset.x, rect.width - 160)));
+      const y = Math.round(Math.max(0, Math.min(e.clientY - rect.top - dragOffset.y, rect.height - 160)));
       
       const noteElement = document.querySelector(`[data-note-id="${draggedNote}"]`) as HTMLElement;
       if (noteElement) {

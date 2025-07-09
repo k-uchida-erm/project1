@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { supabase } from '../lib/supabase';
 import { StickyNote } from '../types';
 
@@ -7,11 +8,19 @@ export const useStickyNotes = () => {
   const [selectedNote, setSelectedNote] = useState<StickyNote | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { userId, isSignedIn, isLoaded } = useAuth();
 
   // スティッキーノートを取得
   const fetchStickyNotes = async () => {
     try {
       setLoading(true);
+      
+      if (!isSignedIn || !userId) {
+        console.log('User not authenticated');
+        setStickyNotes([]);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('sticky_notes')
         .select('*')
@@ -39,6 +48,10 @@ export const useStickyNotes = () => {
   // スティッキーノートを作成
   const createStickyNote = async (note: Omit<StickyNote, 'id'>) => {
     try {
+      if (!isSignedIn || !userId) {
+        throw new Error('User not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('sticky_notes')
         .insert([{
@@ -132,9 +145,12 @@ export const useStickyNotes = () => {
     }
   };
 
+  // 認証状態の変化を監視
   useEffect(() => {
-    fetchStickyNotes();
-  }, []);
+    if (isLoaded) {
+      fetchStickyNotes();
+    }
+  }, [isLoaded, isSignedIn, userId]);
 
   return {
     stickyNotes,

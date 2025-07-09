@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ClerkProvider } from '@clerk/clerk-react';
 import './App.css';
 import DashboardPage from './pages/dashboard';
 import ChatPage from './pages/chat';
@@ -14,7 +15,7 @@ import { GeneratedSpecification } from './types/pages';
 
 type PageView = 'dashboard' | 'chat' | 'preview' | 'documents' | 'mindmap';
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<PageView>('dashboard');
   const [previousPage, setPreviousPage] = useState<PageView>('dashboard');
   const [selectedNoteForChat, setSelectedNoteForChat] = useState<StickyNote | null>(null);
@@ -104,9 +105,11 @@ const App: React.FC = () => {
         )}
         {currentPage === 'chat' && (
           <MobileChatPage
-            selectedNote={selectedNoteForChat}
+            memoTitle={selectedNoteForChat?.title || 'Chat'}
+            onClose={handleClose}
+            onGoToPreview={handleGoToPreview}
             onBack={handleBackToDashboard}
-            onNavigateToPreview={handleGoToPreview}
+            showBackButton={true}
             onNavigateToMindMap={handleNavigateToMindMapFromChat}
           />
         )}
@@ -118,9 +121,9 @@ const App: React.FC = () => {
         )}
         {currentPage === 'preview' && (
           <MobilePreviewPage
-            selectedNote={selectedNoteForChat}
-            onBack={handleReturnToChat}
-            generatedSpecification={generatedSpecification}
+            onClose={handleClose}
+            onReturnToChat={handleReturnToChat}
+            onSaveToDocuments={handleSaveToDocuments}
           />
         )}
         {currentPage === 'documents' && (
@@ -149,6 +152,7 @@ const App: React.FC = () => {
           onBack={handleBackToDashboard}
           onNavigateToPreview={handleGoToPreview}
           onNavigateToMindMap={handleNavigateToMindMapFromChat}
+          onNavigateToDocuments={handleNavigateToDocuments}
         />
       )}
       {currentPage === 'mindmap' && (
@@ -171,6 +175,18 @@ const App: React.FC = () => {
         />
       )}
     </>
+  );
+};
+
+const App: React.FC = () => {
+  if (!import.meta.env.VITE_CLERK_PUBLISHABLE_KEY) {
+    throw new Error("Missing Publishable Key")
+  }
+
+  return (
+    <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
+      <AppContent />
+    </ClerkProvider>
   );
 };
 

@@ -9,7 +9,7 @@ import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import RightPanel from '../../components/organisms/RightPanel';
 
-const ChatPage: React.FC<ChatPageProps> = ({ selectedNote, onBack, onNavigateToPreview, onNavigateToMindMap }) => {
+const ChatPage: React.FC<ChatPageProps> = ({ selectedNote, onBack, onNavigateToPreview, onNavigateToMindMap, onNavigateToDocuments }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -126,13 +126,13 @@ ${messages.filter(m => !m.isUser).slice(-3).map(m => `${m.content}`).join('\n\n'
         onMouseEnter={() => setSidebarExpanded(true)}
         onMouseLeave={() => setSidebarExpanded(false)}
         onNavigateToDashboard={onBack}
-        onNavigateToDocuments={() => console.log('Navigate to documents')}
+        onNavigateToDocuments={onNavigateToDocuments}
         mobileVisible={mobileMenuVisible}
         onMobileClose={handleMobileMenuClose}
       />
 
       <Header 
-        title={selectedNote?.title || ''}
+        title={selectedNote?.title || 'Chat'}
         onClose={() => console.log('Close')}
         onBack={onBack}
         showBackButton={onBack !== undefined}

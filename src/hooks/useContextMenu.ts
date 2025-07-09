@@ -24,15 +24,14 @@ export const useContextMenu = () => {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
 
-
     const x = contextMenu.x - rect.left - 80;
     const y = contextMenu.y - rect.top - 80;
     
     const noteToCreate = {
-      title: 'New Memo',
-      content: 'Click to edit...',
-      x: Math.max(0, x),
-      y: Math.max(0, y)
+      title: '',
+      content: '',
+      x: Math.max(0, Math.round(x)),
+      y: Math.max(0, Math.round(y))
     };
     
     try {
