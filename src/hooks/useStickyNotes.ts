@@ -38,9 +38,7 @@ export const useStickyNotes = () => {
 
   // スティッキーノートを作成
   const createStickyNote = async (note: Omit<StickyNote, 'id'>) => {
-    console.log('Creating sticky note:', note);
     try {
-      console.log('About to call supabase insert...');
       const { data, error } = await supabase
         .from('sticky_notes')
         .insert([{
@@ -52,14 +50,8 @@ export const useStickyNotes = () => {
         .select()
         .single();
 
-      console.log('Supabase call completed. Data:', data, 'Error:', error);
-
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
-      }
-
-      console.log('Supabase response:', data);
+      if (error) throw error;
+      if (!data) throw new Error('No data returned from Supabase');
 
       const newNote: StickyNote = {
         id: data.id,
@@ -69,14 +61,9 @@ export const useStickyNotes = () => {
         y: data.y
       };
 
-      setStickyNotes(prev => {
-        console.log('Updating notes state. Previous:', prev.length, 'Adding:', newNote);
-        return [newNote, ...prev];
-      });
-      console.log('Note created successfully:', newNote);
+      setStickyNotes(prev => [newNote, ...prev]);
       return newNote;
     } catch (err) {
-      console.error('Full error details:', err);
       setError(err instanceof Error ? err.message : 'ノートの作成に失敗しました');
       console.error('Error creating sticky note:', err);
       throw err;

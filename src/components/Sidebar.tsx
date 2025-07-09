@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
   const handleItemClick = (onClick?: () => void) => {
     if (onClick) onClick();
-    // モバイル表示時はクリック後にサイドバーを閉じる
+
     if (onMobileClose) onMobileClose();
   };
 

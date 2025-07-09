@@ -14,13 +14,10 @@ const DashboardContextMenu: React.FC<DashboardContextMenuProps> = ({
   onCreateMemo
 }) => {
   const handleCreateMemo = async () => {
-    console.log('DashboardContextMenu: handleCreateMemo clicked');
     try {
-      console.log('DashboardContextMenu: calling onCreateMemo...');
       await onCreateMemo();
-      console.log('DashboardContextMenu: onCreateMemo completed successfully');
     } catch (error) {
-      console.error('DashboardContextMenu: Failed to create memo:', error);
+      console.error('Failed to create memo:', error);
     }
   };
 

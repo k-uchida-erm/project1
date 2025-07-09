@@ -10,7 +10,7 @@ import { useContextMenu } from '../../hooks/useContextMenu';
 import { useDashboardSidebar } from '../../hooks/useDashboardSidebar';
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavigateToDocuments, onNavigateToMindMap }) => {
-  // カスタムフックからの状態とハンドラー
+
   const {
     stickyNotes,
     selectedNote,
@@ -46,7 +46,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
     handleClose
   } = useDashboardSidebar();
 
-  // ノートアクションのコールバック設定
+
   const handleNoteActionWithCallbacks = (action: string, noteId: string) => {
     handleNoteAction(action, noteId, {
       onNavigateToChat,
@@ -61,7 +61,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
       sidebarExpanded={sidebarExpanded}
       onSidebarMouseEnter={handleSidebarMouseEnter}
       onSidebarMouseLeave={handleSidebarMouseLeave}
-      onNavigateToDashboard={() => {}} // Already on dashboard
+      onNavigateToDashboard={() => window.location.reload()}
       onNavigateToDocuments={onNavigateToDocuments}
       showCloseButton={false}
       isDashboard={true}
@@ -86,7 +86,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
               if (!hasDragged) {
                 openNoteModal(note);
               }
-              setHasDragged(false); // リセット
+              setHasDragged(false);
             }}
             onDelete={() => deleteStickyNote(note.id)}
             onMindMapClick={() => handleNoteActionWithCallbacks('mindmap', note.id)}

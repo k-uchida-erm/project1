@@ -5,7 +5,7 @@ export const useContextMenu = () => {
   const [contextMenu, setContextMenu] = useState<ContextMenu>({ visible: false, x: 0, y: 0 });
 
   const handleCanvasClick = (e: React.MouseEvent) => {
-    // 左クリックではメモを作成しない、コンテキストメニューを閉じるのみ
+
     setContextMenu({ visible: false, x: 0, y: 0 });
   };
 
@@ -21,16 +21,12 @@ export const useContextMenu = () => {
   };
 
   const handleCreateMemo = async (canvasRef: React.RefObject<HTMLDivElement>, createStickyNote: (note: Omit<StickyNote, 'id'>) => Promise<StickyNote>) => {
-    console.log('handleCreateMemo called');
     const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) {
-      console.log('Canvas ref not found');
-      return;
-    }
+    if (!rect) return;
 
-    // コンテキストメニューの位置を基準にメモを作成
-    const x = contextMenu.x - rect.left - 80; // Account for sticky note width/2
-    const y = contextMenu.y - rect.top - 80; // Account for sticky note height/2
+
+    const x = contextMenu.x - rect.left - 80;
+    const y = contextMenu.y - rect.top - 80;
     
     const noteToCreate = {
       title: 'New Memo',
@@ -39,11 +35,8 @@ export const useContextMenu = () => {
       y: Math.max(0, y)
     };
     
-    console.log('Creating note with data:', noteToCreate);
-    
     try {
-      const createdNote = await createStickyNote(noteToCreate);
-      console.log('Note creation successful:', createdNote);
+      await createStickyNote(noteToCreate);
       setContextMenu({ visible: false, x: 0, y: 0 });
     } catch (error) {
       console.error('Failed to create sticky note:', error);
