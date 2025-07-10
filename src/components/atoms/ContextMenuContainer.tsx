@@ -1,13 +1,5 @@
 import React from 'react';
-
-interface ContextMenuContainerProps {
-  children: React.ReactNode;
-  x: number;
-  y: number;
-  visible: boolean;
-  minWidth?: string;
-  className?: string;
-}
+import { ContextMenuContainerProps } from '../../types/components';
 
 const ContextMenuContainer: React.FC<ContextMenuContainerProps> = ({
   children,

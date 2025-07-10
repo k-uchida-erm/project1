@@ -1,12 +1,6 @@
 import React from 'react';
+import { SendButtonProps } from '../../types/components';
 import { ArrowUp } from 'lucide-react';
-
-interface SendButtonProps {
-  onClick: () => void;
-  disabled?: boolean;
-  isLoading?: boolean;
-  className?: string;
-}
 
 const SendButton: React.FC<SendButtonProps> = ({
   onClick,

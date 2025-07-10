@@ -13,7 +13,7 @@ header {
 /* ==== CSS Variables for Sidebar Width ==== */
 :root {
   --sidebar-width: 80px;  /* Default collapsed width from w-20 */
-  --side-gap: clamp(24px, 7vw, 140px);
+  --side-gap: clamp(16px, 5vw, 80px);
   --content-left-offset: calc(var(--sidebar-width) + var(--side-gap)); /* サイドバー幅 + 余白 */
 }
 
@@ -25,7 +25,7 @@ header {
 @media (max-width: 1279px) {
   :root {
     --sidebar-width: 0px !important; /* 強制的に0に設定 */
-    --side-gap: clamp(16px, 5vw, 32px); /* モバイル時は左右均等の余白 */
+    --side-gap: clamp(12px, 4vw, 24px); /* モバイル時は左右均等の余白 */
     --content-left-offset: var(--side-gap); /* モバイル時は左右均等 */
   }
   
@@ -60,22 +60,30 @@ header {
   gap: clamp(24px, 3vw, 56px);
   margin-top: 5vh; /* Push content down from title */
   padding-left: var(--content-left-offset); /* 統一された左端位置 */
-  padding-right: clamp(24px, 20vw - 120px, 140px); /* 可変の余白 */
+  padding-right: clamp(16px, 15vw - 60px, 80px); /* 可変の余白 */
   box-sizing: border-box; /* パディングを幅に含める */
 }
 
 .left-panel {
-  flex: 5 1 0;
+  flex: 2 1 0;
   background-color: white;
   border-radius: 1rem;
   min-width: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+}
+
+.left-panel.expanded {
+  flex: none;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .right-panel {
-  flex: 2 1 0;
+  flex: 1 1 0;
   min-width: 240px;
   max-width: 420px;
   background-color: white;

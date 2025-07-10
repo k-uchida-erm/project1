@@ -1,17 +1,12 @@
 import React from 'react';
+import { ProjectLogoItemProps } from '../../types/components';
 import ProjectIcon from './ProjectIcon';
-
-interface ProjectLogoItemProps {
-  expanded: boolean;
-  mobileVisible: boolean;
-}
 
 const ProjectLogoItem: React.FC<ProjectLogoItemProps> = ({
   expanded,
   mobileVisible
 }) => {
   const isExpanded = mobileVisible || expanded;
-  
   return (
     <div 
       className={`flex items-center transition-all duration-200 ${

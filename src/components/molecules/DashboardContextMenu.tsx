@@ -6,7 +6,7 @@ import ContextMenuItem from '../atoms/ContextMenuItem';
 
 interface DashboardContextMenuProps {
   contextMenu: ContextMenu;
-  onCreateMemo: () => void | Promise<void>;
+  onCreateMemo: () => Promise<void>;
 }
 
 const DashboardContextMenu: React.FC<DashboardContextMenuProps> = ({

@@ -1,95 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PreviewContentProps } from '../../types/components';
 
-const PreviewContent: React.FC = () => {
+const PreviewContent: React.FC<PreviewContentProps> = ({ content, onChange }) => {
+  const [localContent, setLocalContent] = useState(content);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value;
+    setLocalContent(newContent);
+    onChange(newContent);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto py-8">
-      <div className="bg-white min-h-screen">
-        {/* Document Title */}
-        <input
-          type="text"
-          defaultValue="Untitled Document"
-          className="w-full text-4xl font-bold mb-8 border-none outline-none bg-transparent placeholder-gray-400"
-          placeholder="Untitled"
-        />
+    <div className="w-full h-full p-4">
+      <div className="prose max-w-none">
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold text-slate-800 mb-4">
+            プレビューコンテンツ
+          </h1>
+        </div>
         
-        {/* Document Content - Notion-style blocks */}
-        <div className="space-y-4">
-          <div className="group">
-            <div 
-              contentEditable
-              suppressContentEditableWarning={true}
-              className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              data-placeholder="Type '/' for commands"
-            >
-              Welcome to your document. Start typing here...
-            </div>
-          </div>
-          
-          <div className="group">
-            <h2 
-              contentEditable
-              suppressContentEditableWarning={true}
-              className="text-2xl font-semibold min-h-[2rem] px-1 py-1 rounded outline-none cursor-text"
-            >
-              Heading 2
-            </h2>
-          </div>
-          
-          <div className="group">
-            <div 
-              contentEditable
-              suppressContentEditableWarning={true}
-              className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-            >
-              This is a paragraph. You can edit this text directly by clicking on it.
-            </div>
-          </div>
-          
-          <div className="group">
-            <h3 
-              contentEditable
-              suppressContentEditableWarning={true}
-              className="text-xl font-medium min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-            >
-              Heading 3
-            </h3>
-          </div>
-          
-          <div className="group">
-            <ul className="list-disc pl-6 space-y-1">
-              <li 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Bullet point 1
-              </li>
-              <li 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Bullet point 2
-              </li>
-              <li 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Bullet point 3
-              </li>
-            </ul>
-          </div>
-          
-          <div className="group">
-            <div 
-              contentEditable
-              suppressContentEditableWarning={true}
-              className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-            >
-              Add more content by clicking here...
-            </div>
-          </div>
+        <div className="bg-white rounded-lg border border-slate-200 p-6">
+          <textarea
+            className="w-full h-96 p-4 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            placeholder="ここにコンテンツを入力してください..."
+            value={localContent}
+            onChange={handleChange}
+          />
         </div>
       </div>
     </div>

@@ -6,10 +6,6 @@ import ChatPage from './pages/chat';
 import PreviewPage from './pages/preview';
 import DocumentsPage from './pages/documents';
 import MindMapPage from './pages/mindmap/page';
-import MobilePage from './pages/mobile';
-import MobileChatPage from './pages/mobile/chat';
-import MobilePreviewPage from './pages/mobile/preview';
-import useDevice from './hooks/useDevice';
 import { StickyNote } from './types';
 import { GeneratedSpecification } from './types/pages';
 
@@ -22,7 +18,6 @@ const AppContent: React.FC = () => {
   const [selectedNoteForMindMap, setSelectedNoteForMindMap] = useState<StickyNote | null>(null);
   const [currentDocumentId, setCurrentDocumentId] = useState<string | null>(null);
   const [generatedSpecification, setGeneratedSpecification] = useState<GeneratedSpecification | null>(null);
-  const { isMobile } = useDevice();
 
   const navigateToPage = (page: PageView) => {
     setPreviousPage(currentPage);
@@ -92,51 +87,6 @@ const AppContent: React.FC = () => {
     }
   };
 
-  // モバイル端末の場合は専用のモバイルページを表示
-  if (isMobile) {
-    return (
-      <>
-        {currentPage === 'dashboard' && (
-          <MobilePage 
-            onNavigateToChat={handleNavigateToChat}
-            onNavigateToDocuments={handleNavigateToDocuments}
-            onNavigateToMindMap={handleNavigateToMindMap}
-          />
-        )}
-        {currentPage === 'chat' && (
-          <MobileChatPage
-            memoTitle={selectedNoteForChat?.title || 'Chat'}
-            onClose={handleClose}
-            onGoToPreview={handleGoToPreview}
-            onBack={handleBackToDashboard}
-            showBackButton={true}
-            onNavigateToMindMap={handleNavigateToMindMapFromChat}
-          />
-        )}
-        {currentPage === 'mindmap' && (
-          <MindMapPage
-            selectedNote={selectedNoteForMindMap}
-            onBack={handleBackFromMindMap}
-          />
-        )}
-        {currentPage === 'preview' && (
-          <MobilePreviewPage
-            onClose={handleClose}
-            onReturnToChat={handleReturnToChat}
-            onSaveToDocuments={handleSaveToDocuments}
-          />
-        )}
-        {currentPage === 'documents' && (
-          <DocumentsPage
-            onBack={handleBackToDashboard}
-            onNavigateToPreview={handleNavigateToPreview}
-          />
-        )}
-      </>
-    );
-  }
-
-  // デスクトップ版の表示（従来通り）
   return (
     <>
       {currentPage === 'dashboard' && (

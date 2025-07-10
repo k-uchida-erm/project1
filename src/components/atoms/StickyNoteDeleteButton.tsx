@@ -1,9 +1,6 @@
 import React from 'react';
+import { StickyNoteDeleteButtonProps } from '../../types/components';
 import { X } from 'lucide-react';
-
-interface StickyNoteDeleteButtonProps {
-  onDelete: () => void;
-}
 
 const StickyNoteDeleteButton: React.FC<StickyNoteDeleteButtonProps> = ({
   onDelete

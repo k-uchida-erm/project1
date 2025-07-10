@@ -1,15 +1,14 @@
 import React from 'react';
 import { SignedIn, SignedOut, UserButton, useAuth } from '@clerk/clerk-react';
 import PageLayout from '../../components/layouts/PageLayout';
-import StickyNoteCard from '../../components/molecules/StickyNoteCard';
 import StickyNoteModal from '../../components/molecules/StickyNoteModal';
-import DashboardContextMenu from '../../components/molecules/DashboardContextMenu';
 import LandingPage from '../../components/LandingPage';
 import { DashboardPageProps } from '../../types/pages';
 import { useDragAndDrop } from '../../hooks/useDragAndDrop';
 import { useStickyNotes } from '../../hooks/useStickyNotes';
 import { useContextMenu } from '../../hooks/useContextMenu';
 import { useDashboardSidebar } from '../../hooks/useDashboardSidebar';
+import DashboardMainPanel from '../../components/organisms/DashboardMainPanel';
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavigateToDocuments, onNavigateToMindMap }) => {
   const { isLoaded } = useAuth();
@@ -20,6 +19,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
     createStickyNote,
     updateStickyNote,
     deleteStickyNote,
+    resizeStickyNote,
     openNoteModal,
     closeModal,
     handleNoteAction
@@ -56,7 +56,22 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
     });
   };
 
-  // 認証がロードされていない場合の表示
+  const handleCreateMemoWithModal = async () => {
+    try {
+      const newNote = await handleCreateMemo(canvasRef, createStickyNote);
+      if (newNote) {
+        openNoteModal(newNote);
+      }
+    } catch (error) {
+      console.error('Failed to create memo:', error);
+    }
+  };
+
+  // StickyNoteのローカルstateのみ更新（DB反映しない）
+  const updateStickyNoteLocal = (id: string, width: number, height: number, x?: number, y?: number) => {
+    updateStickyNote(id, { width, height, ...(typeof x === 'number' ? { x } : {}), ...(typeof y === 'number' ? { y } : {}) });
+  };
+
   if (!isLoaded) {
     return (
       <div className="h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-50 to-slate-100">
@@ -86,42 +101,26 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigateToChat, onNavig
           <div className="absolute top-4 right-4 z-50">
             <UserButton />
           </div>
-          
-          <div 
-            ref={canvasRef}
-            className="w-full h-full relative overflow-hidden cursor-pointer"
-            onClick={handleCanvasClick}
-            onContextMenu={(e) => handleCanvasContextMenu(e, canvasRef)}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-          >
-            {/* Sticky Notes */}
-            {stickyNotes.map(note => (
-              <StickyNoteCard
-                key={note.id}
-                note={note}
-                isDragged={draggedNote === note.id}
-                hasDragged={hasDragged}
-                onMouseDown={(e) => handleMouseDown(e, note.id)}
-                onClick={() => {
-                  if (!hasDragged) {
-                    openNoteModal(note);
-                  }
-                  setHasDragged(false);
-                }}
-                onDelete={() => deleteStickyNote(note.id)}
-                onMindMapClick={() => handleNoteActionWithCallbacks('mindmap', note.id)}
-                onChatClick={() => handleNoteActionWithCallbacks('chat', note.id)}
-              />
-            ))}
-
-            {/* Context Menu */}
-            <DashboardContextMenu
-              contextMenu={contextMenu}
-              onCreateMemo={() => handleCreateMemo(canvasRef, createStickyNote)}
-            />
-          </div>
-
+          <DashboardMainPanel
+            stickyNotes={stickyNotes}
+            draggedNote={draggedNote}
+            hasDragged={hasDragged}
+            canvasRef={canvasRef}
+            handleMouseDown={handleMouseDown}
+            handleMouseMove={handleMouseMove}
+            handleMouseUp={handleMouseUp}
+            setHasDragged={setHasDragged}
+            openNoteModal={openNoteModal}
+            deleteStickyNote={deleteStickyNote}
+            onMindMapClick={(id) => handleNoteActionWithCallbacks('mindmap', id)}
+            onChatClick={(id) => handleNoteActionWithCallbacks('chat', id)}
+            onResize={updateStickyNoteLocal}
+            onResizeComplete={resizeStickyNote}
+            contextMenu={contextMenu}
+            handleCanvasClick={handleCanvasClick}
+            handleCanvasContextMenu={handleCanvasContextMenu}
+            handleCreateMemoWithModal={handleCreateMemoWithModal}
+          />
           {/* Modal */}
           {selectedNote && (
             <StickyNoteModal

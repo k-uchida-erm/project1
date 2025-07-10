@@ -120,19 +120,6 @@ export interface MenuButtonProps {
   iconClassName?: string;
 }
 
-export interface MobileBackButtonProps {
-  onClick: () => void;
-  size?: number;
-  strokeWidth?: number;
-  className?: string;
-  iconClassName?: string;
-}
-
-export interface MobileCloseButtonProps {
-  onClick: () => void;
-  className?: string;
-}
-
 export interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -179,4 +166,145 @@ export interface RightPanelProps {
   onDetailLevelChange: (level: number) => void;
   onMindMap: () => void;
   onNext: () => void;
+  // メモ関連のプロパティを追加
+  selectedNote?: {
+    id: string;
+    title: string;
+    content: string;
+  };
+  onNoteUpdate?: (updates: { title?: string; content?: string }) => void;
+  onToggle?: () => void;
+}
+
+export interface DashboardMainPanelProps {
+  stickyNotes: StickyNote[];
+  draggedNote: string | null;
+  hasDragged: boolean;
+  canvasRef: React.RefObject<HTMLDivElement>;
+  handleMouseDown: (e: React.MouseEvent, noteId: string) => void;
+  handleMouseMove: (e: React.MouseEvent) => void;
+  handleMouseUp: (e: React.MouseEvent) => void;
+  setHasDragged: (v: boolean) => void;
+  openNoteModal: (note: StickyNote) => void;
+  deleteStickyNote: (id: string) => void;
+  onMindMapClick: (id: string) => void;
+  onChatClick: (id: string) => void;
+  onResize: (id: string, width: number, height: number, x?: number, y?: number) => void;
+  onResizeComplete: (id: string, width: number, height: number, x?: number, y?: number) => void;
+  contextMenu: any;
+  handleCanvasClick: (e: React.MouseEvent) => void;
+  handleCanvasContextMenu: (e: React.MouseEvent, ref: React.RefObject<HTMLDivElement>) => void;
+  handleCreateMemoWithModal: () => Promise<void>;
+} 
+
+export interface StickyNoteCardProps {
+  note: StickyNote;
+  isDragged: boolean;
+  hasDragged: boolean;
+  onMouseDown: (e: React.MouseEvent) => void;
+  onClick: () => void;
+  onDelete: () => void;
+  onMindMapClick: () => void;
+  onChatClick: () => void;
+  onResize?: (id: string, width: number, height: number, x?: number, y?: number) => void;
+  onResizeComplete?: (id: string, width: number, height: number, x?: number, y?: number) => void;
+}
+
+export interface StickyNoteModalProps {
+  note: StickyNote;
+  onClose: () => void;
+  onUpdateNote: (updates: Partial<StickyNote>) => void;
+  onMindMapClick: () => void;
+  onChatClick: () => void;
+}
+
+export interface ChatLeftPanelProps {
+  selectedNote: StickyNote | null;
+  localMessages: Message[];
+  currentMessage: string;
+  onChangeMessage: (v: string) => void;
+  onSendMessage: () => void;
+  onKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  isAITyping: boolean;
+  isStreamingText: boolean;
+  typingMessage: Message | null;
+  typingText: string;
+}
+
+export interface PreviewContentProps {
+  content: string;
+  onChange: (content: string) => void;
+}
+
+export interface StickyNoteActionButtonProps {
+  icon: LucideIcon;
+  onClick: () => void;
+  title: string;
+  className?: string;
+  size?: number;
+  disabled?: boolean;
+}
+
+export interface ModalActionButtonProps {
+  icon: LucideIcon;
+  onClick: () => void;
+  text: string;
+  disabled?: boolean;
+  variant?: 'chat' | 'mindmap';
+}
+
+export interface ContextMenuItemProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  icon?: LucideIcon;
+  disabled?: boolean;
+  className?: string;
+}
+
+export interface ContextMenuContainerProps {
+  children: React.ReactNode;
+  x: number;
+  y: number;
+  visible: boolean;
+  minWidth?: string;
+  className?: string;
+}
+
+export interface SendButtonProps {
+  onClick: () => void;
+  disabled?: boolean;
+  isLoading?: boolean;
+  className?: string;
+}
+
+export interface StickyNoteDeleteButtonProps {
+  onDelete: () => void;
+}
+
+export interface PanelToggleButtonProps {
+  isVisible: boolean;
+  onToggle: () => void;
+}
+
+export interface ProjectIconProps {
+  size?: number;
+  className?: string;
+  strokeless?: boolean;
+}
+
+export interface ContextMenuButtonProps {
+  children: React.ReactNode;
+  actions: any[];
+  className?: string;
+  disabled?: boolean;
+}
+
+export interface MarkdownRendererProps {
+  content: string;
+  className?: string;
+} 
+
+export interface ProjectLogoItemProps {
+  expanded: boolean;
+  mobileVisible: boolean;
 } 

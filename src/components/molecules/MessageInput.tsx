@@ -1,33 +1,56 @@
 import React, { useState } from 'react';
+import { ArrowUp } from 'lucide-react';
 import Input from '../atoms/Input';
 import SendButton from '../atoms/SendButton';
 import { MessageInputProps } from '../../types/components';
 
-const MessageInput: React.FC<MessageInputProps> = ({
+interface MessageInputExProps extends MessageInputProps {
+  rounded?: string;
+  className?: string;
+}
+
+const MessageInput: React.FC<MessageInputExProps> = ({
   value,
   onChange,
   onSend,
   onKeyPress,
-  isLoading = false
+  isLoading = false,
+  rounded = 'rounded-full',
+  className = '',
 }) => {
   return (
-    <div className="pt-4 px-4 pb-2 relative z-10 mt-auto">
-      <div className="bg-white rounded-full border border-slate-200/50 shadow-[0_4px_16px_rgba(0,0,0,0.07)] px-4 py-5 w-full mx-auto hover:shadow-[0_8px_20px_rgba(0,0,0,0.12)] transition-all duration-300">
-        <div className="flex items-center space-x-3">
+    <div>
+      <div className={`shadow-xl rounded-3xl flex items-center relative px-6 py-6 min-h-[64px] bg-transparent border border-gray-200 min-w-[600px] max-w-[1200px] mx-auto`}>
+          {/* ＋ボタン（ファイルアップロード） */}
+          <label className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 cursor-pointer mr-3" title="ファイルをアップロード">
+            <span className="text-2xl text-gray-500">＋</span>
+            <input type="file" className="hidden" />
+          </label>
           <Input
             value={value}
             onChange={onChange}
             onKeyPress={onKeyPress}
-            placeholder="Type a message…"
-            className="flex-1 bg-transparent text-slate-800 placeholder-slate-500"
+            placeholder="メッセージを送信する"
+            className="flex-1 bg-transparent border-none text-base focus:outline-none focus:ring-0"
           />
-          <SendButton
-            onClick={onSend}
-            disabled={!value.trim()}
-            isLoading={isLoading}
-          />
+          <div className="absolute right-4 top-1/2 -translate-y-1/2">
+            <button
+              onClick={onSend}
+              disabled={!value.trim() || isLoading}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                value.trim() && !isLoading
+                  ? 'bg-gray-800 text-white hover:bg-gray-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {isLoading ? (
+                <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <ArrowUp size={18} />
+              )}
+            </button>
+          </div>
         </div>
-      </div>
     </div>
   );
 };

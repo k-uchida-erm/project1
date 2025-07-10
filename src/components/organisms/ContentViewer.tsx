@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ContentViewerProps } from '../../types/components';
 
 const ContentViewer: React.FC<ContentViewerProps> = ({ content, mode }) => {
+  // ドキュメントブロックの状態管理
+  const [documentBlocks, setDocumentBlocks] = useState([
+    { id: '1', content: 'Welcome to your document. Start typing here...', type: 'paragraph' },
+    { id: '2', content: 'Heading 2', type: 'heading2' },
+    { id: '3', content: 'This is a paragraph. You can edit this text directly by clicking on it.', type: 'paragraph' },
+    { id: '4', content: 'Heading 3', type: 'heading3' },
+    { id: '5', content: '• Bullet point 1\n• Bullet point 2\n• Bullet point 3', type: 'bullet' },
+    { id: '6', content: 'Add more content by clicking here...', type: 'paragraph' }
+  ]);
+
+  const updateBlockContent = (blockId: string, content: string) => {
+    setDocumentBlocks(prev => prev.map(block => 
+      block.id === blockId ? { ...block, content } : block
+    ));
+  };
+
   const renderDocumentView = () => {
     return (
       <div className="max-w-4xl mx-auto py-8">
@@ -14,84 +30,29 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content, mode }) => {
             placeholder="Untitled"
           />
           
-          {/* Document Content - Notion-style blocks */}
+          {/* Document Content - Simple text blocks */}
           <div className="space-y-4">
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-                data-placeholder="Type '/' for commands"
-              >
-                Welcome to your document. Start typing here...
+            {documentBlocks.map((block) => (
+              <div key={block.id} className="group">
+                <textarea
+                  value={block.content}
+                  onChange={(e) => updateBlockContent(block.id, e.target.value)}
+                  placeholder={
+                    block.type === 'paragraph' ? "テキストを入力してください" :
+                    block.type === 'heading2' ? 'Heading 2' :
+                    block.type === 'heading3' ? 'Heading 3' :
+                    'Type here...'
+                  }
+                  className={`
+                    w-full min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text border border-transparent focus:border-blue-300 resize-none
+                    ${block.type === 'heading2' ? 'text-2xl font-semibold' : ''}
+                    ${block.type === 'heading3' ? 'text-xl font-medium' : ''}
+                    hover:bg-gray-50 focus:bg-white
+                  `}
+                  rows={block.content.split('\n').length || 1}
+                />
               </div>
-            </div>
-            
-            <div className="group">
-              <h2 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="text-2xl font-semibold min-h-[2rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Heading 2
-              </h2>
-            </div>
-            
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                This is a paragraph. You can edit this text directly by clicking on it.
-              </div>
-            </div>
-            
-            <div className="group">
-              <h3 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="text-xl font-medium min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Heading 3
-              </h3>
-            </div>
-            
-            <div className="group">
-              <ul className="list-disc pl-6 space-y-1">
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-                >
-                  Bullet point 1
-                </li>
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-                >
-                  Bullet point 2
-                </li>
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-                >
-                  Bullet point 3
-                </li>
-              </ul>
-            </div>
-            
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-1 py-1 rounded outline-none cursor-text"
-              >
-                Add more content by clicking here...
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -101,41 +62,13 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content, mode }) => {
   const renderMindMapView = () => {
     return (
       <div className="max-w-6xl mx-auto py-8">
-        <div className="relative bg-white overflow-hidden" style={{ height: '70vh' }}>
-          <svg className="w-full h-full">
-            {/* Central node */}
-            <g>
-              <circle cx="50%" cy="50%" r="40" fill="white" stroke="#D1D1D1" strokeWidth="1" />
-              <text x="50%" y="50%" textAnchor="middle" dy="0.3em" className="text-sm font-semibold">
-                Idea
-              </text>
-            </g>
-
-            {/* Child nodes */}
-            {[
-              { x: '30%', y: '30%', label: 'Example 1' },
-              { x: '70%', y: '30%', label: 'Example 2' },
-              { x: '30%', y: '70%', label: 'Example 3' },
-              { x: '70%', y: '70%', label: 'Example 4' }
-            ].map((node, index) => (
-              <g key={index}>
-                {/* Connection line */}
-                <line
-                  x1="50%"
-                  y1="50%"
-                  x2={node.x}
-                  y2={node.y}
-                  stroke="#D1D1D1"
-                  strokeWidth="1"
-                />
-                {/* Node */}
-                <circle cx={node.x} cy={node.y} r="30" fill="white" stroke="#D1D1D1" strokeWidth="1" />
-                <text x={node.x} y={node.y} textAnchor="middle" dy="0.3em" className="text-xs">
-                  {node.label}
-                </text>
-              </g>
-            ))}
-          </svg>
+        <div className="bg-white p-8" style={{ height: '70vh' }}>
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-700 mb-4">Mind Map View</h3>
+              <p className="text-gray-500">Mind map functionality coming soon...</p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -155,14 +88,21 @@ const ContentViewer: React.FC<ContentViewerProps> = ({ content, mode }) => {
             {gridItems.map((item, index) => (
               <div
                 key={index}
-                contentEditable={item !== ''}
-                suppressContentEditableWarning={true}
                 className={`border border-gray-300 bg-white p-4 flex items-center justify-center text-center rounded hover:bg-gray-50 focus:bg-gray-50 outline-none cursor-text ${
                   item === '' ? 'opacity-30 cursor-default' : ''
                 }`}
                 style={{ boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}
               >
-                <span className="text-sm font-medium">{item || 'Example'}</span>
+                {item !== '' ? (
+                  <textarea
+                    defaultValue={item}
+                    onChange={() => {}} // 必要に応じて更新ロジックを追加
+                    placeholder="Type here..."
+                    className="w-full h-full text-sm font-medium text-center border-none outline-none bg-transparent resize-none"
+                  />
+                ) : (
+                  <span className="text-sm font-medium">Example</span>
+                )}
               </div>
             ))}
           </div>

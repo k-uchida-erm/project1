@@ -5,7 +5,6 @@ export const useContextMenu = () => {
   const [contextMenu, setContextMenu] = useState<ContextMenu>({ visible: false, x: 0, y: 0 });
 
   const handleCanvasClick = (e: React.MouseEvent) => {
-
     setContextMenu({ visible: false, x: 0, y: 0 });
   };
 
@@ -20,25 +19,28 @@ export const useContextMenu = () => {
     }
   };
 
-  const handleCreateMemo = async (canvasRef: React.RefObject<HTMLDivElement>, createStickyNote: (note: Omit<StickyNote, 'id'>) => Promise<StickyNote>) => {
+  const handleCreateMemo = async (
+    canvasRef: React.RefObject<HTMLDivElement>, 
+    createStickyNote: (note: Omit<StickyNote, 'id'>) => Promise<StickyNote>
+  ): Promise<StickyNote | null> => {
     const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
+    if (!rect) return null;
 
     const x = contextMenu.x - rect.left - 80;
     const y = contextMenu.y - rect.top - 80;
     
-    const noteToCreate = {
-      title: '',
-      content: '',
-      x: Math.max(0, Math.round(x)),
-      y: Math.max(0, Math.round(y))
-    };
-    
     try {
-      await createStickyNote(noteToCreate);
+      const newNote = await createStickyNote({
+        title: 'New Note',
+        content: '',
+        x: Math.max(0, Math.round(x)),
+        y: Math.max(0, Math.round(y))
+      });
       setContextMenu({ visible: false, x: 0, y: 0 });
+      return newNote;
     } catch (error) {
       console.error('Failed to create sticky note:', error);
+      return null;
     }
   };
 

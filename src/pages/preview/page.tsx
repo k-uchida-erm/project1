@@ -2,12 +2,29 @@ import React, { useState } from 'react';
 import PageLayout from '../../components/layouts/PageLayout';
 import { StickyNote } from '../../types';
 import { PreviewPageProps } from '../../types/pages';
+import MarkdownRenderer from '../../components/molecules/MarkdownRenderer';
 
 const PreviewPage: React.FC<PreviewPageProps> = ({ selectedNote, onBack, generatedSpecification }) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  // ドキュメントの状態管理
+  const [documentTitle, setDocumentTitle] = useState('Untitled Document');
+  const [documentBlocks, setDocumentBlocks] = useState([
+    { id: '1', content: 'Welcome to your document. Start typing here...', type: 'paragraph' },
+    { id: '2', content: 'Heading 2', type: 'heading2' },
+    { id: '3', content: 'This is a paragraph. You can edit this text directly by clicking on it.', type: 'paragraph' },
+    { id: '4', content: 'Heading 3', type: 'heading3' },
+    { id: '5', content: '• Bullet point 1\n• Bullet point 2\n• Bullet point 3', type: 'bullet' },
+    { id: '6', content: 'Add more content by clicking here...', type: 'paragraph' }
+  ]);
 
   const handleSave = () => {
     console.log('Save to documents');
+  };
+
+  const updateBlockContent = (blockId: string, content: string) => {
+    setDocumentBlocks(prev => prev.map(block => 
+      block.id === blockId ? { ...block, content } : block
+    ));
   };
 
   const renderGeneratedSpecification = () => {
@@ -33,16 +50,9 @@ const PreviewPage: React.FC<PreviewPageProps> = ({ selectedNote, onBack, generat
           
           {/* Generated Content */}
           <div className="prose prose-slate max-w-none">
-            <div 
-              className="text-slate-700 leading-relaxed whitespace-pre-line"
-              dangerouslySetInnerHTML={{ 
-                __html: generatedSpecification.content
-                  .replace(/^# /gm, '<h1 class="text-3xl font-bold mb-4 mt-8 text-slate-800">')
-                  .replace(/^## /gm, '<h2 class="text-2xl font-semibold mb-3 mt-6 text-slate-800">')
-                  .replace(/^### /gm, '<h3 class="text-xl font-medium mb-2 mt-4 text-slate-800">')
-                  .replace(/^- /gm, '<li class="ml-4 mb-1">')
-                  .replace(/^\d+\. /gm, '<li class="ml-4 mb-1 list-decimal">')
-              }}
+            <MarkdownRenderer 
+              content={generatedSpecification.content}
+              className="text-slate-700 leading-relaxed"
             />
           </div>
         </div>
@@ -61,90 +71,37 @@ const PreviewPage: React.FC<PreviewPageProps> = ({ selectedNote, onBack, generat
           <div className="pb-4">
             <input
               type="text"
-              defaultValue="Untitled Document"
+              value={documentTitle}
+              onChange={(e) => setDocumentTitle(e.target.value)}
               className="w-full text-4xl font-bold mb-8 border-none outline-none bg-transparent placeholder-slate-400 text-slate-800 focus:text-blue-900 transition-colors"
               placeholder="Untitled"
             />
           </div>
           
-          {/* Document Content - Notion-style blocks */}
+          {/* Document Content - Simple text blocks */}
           <div className="space-y-6 pb-8">
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-700"
-                data-placeholder="Type '/' for commands"
-              >
-                Welcome to your document. Start typing here...
+            {documentBlocks.map((block) => (
+              <div key={block.id} className="group">
+                <textarea
+                  value={block.content}
+                  onChange={(e) => updateBlockContent(block.id, e.target.value)}
+                  placeholder={
+                    block.type === 'paragraph' ? "テキストを入力してください" :
+                    block.type === 'heading2' ? 'Heading 2' :
+                    block.type === 'heading3' ? 'Heading 3' :
+                    'Type here...'
+                  }
+                  className={`
+                    w-full min-h-[3rem] px-3 py-2 rounded-lg outline-none cursor-text transition-colors border border-transparent focus:border-blue-300 resize-none
+                    ${block.type === 'heading2' ? 'text-2xl font-semibold text-slate-800' : ''}
+                    ${block.type === 'heading3' ? 'text-xl font-medium text-slate-800' : ''}
+                    ${block.type === 'paragraph' ? 'text-slate-700' : ''}
+                    hover:bg-slate-50/50 focus:bg-white
+                  `}
+                  rows={block.content.split('\n').length || 1}
+                />
               </div>
-            </div>
-            
-            <div className="group">
-              <h2 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="text-2xl font-semibold min-h-[2rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-800"
-              >
-                Heading 2
-              </h2>
-            </div>
-            
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-700"
-              >
-                This is a paragraph. You can edit this text directly by clicking on it.
-              </div>
-            </div>
-            
-            <div className="group">
-              <h3 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="text-xl font-medium min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-800"
-              >
-                Heading 3
-              </h3>
-            </div>
-            
-            <div className="group">
-              <ul className="list-none pl-0 space-y-2">
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-700 relative pl-8 before:content-['•'] before:absolute before:left-3 before:text-emerald-500 before:font-bold"
-                >
-                  Bullet point 1
-                </li>
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-700 relative pl-8 before:content-['•'] before:absolute before:left-3 before:text-emerald-500 before:font-bold"
-                >
-                  Bullet point 2
-                </li>
-                <li 
-                  contentEditable
-                  suppressContentEditableWarning={true}
-                  className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-700 relative pl-8 before:content-['•'] before:absolute before:left-3 before:text-emerald-500 before:font-bold"
-                >
-                  Bullet point 3
-                </li>
-              </ul>
-            </div>
-            
-            <div className="group">
-              <div 
-                contentEditable
-                suppressContentEditableWarning={true}
-                className="min-h-[1.5rem] px-3 py-2 rounded-lg outline-none cursor-text text-slate-500"
-              >
-                Add more content by clicking here...
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

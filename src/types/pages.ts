@@ -39,24 +39,4 @@ export interface PreviewPageProps {
 export interface DocumentsPageProps {
   onBack: () => void;
   onNavigateToPreview?: (docId: string) => void;
-}
-
-// Mobile Page Props
-export interface MobilePageProps {
-  onNavigateToChat: (note: StickyNote) => void;
-  onNavigateToDocuments: () => void;
-  onNavigateToMindMap: (note: StickyNote) => void;
-}
-
-export interface MobileChatPageProps {
-  selectedNote: StickyNote | null;
-  onBack: () => void;
-  onNavigateToPreview: (specification?: GeneratedSpecification) => void;
-  onNavigateToMindMap: (note: StickyNote) => void;
-}
-
-export interface MobilePreviewPageProps {
-  selectedNote: StickyNote | null;
-  onBack: () => void;
-  generatedSpecification?: GeneratedSpecification | null;
 } 

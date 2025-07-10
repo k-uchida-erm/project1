@@ -13,6 +13,12 @@ export interface StickyNote {
   content: string;
   x: number;
   y: number;
+  width?: number;  // 幅を追加
+  height?: number; // 高さを追加
+  color?: string;
+  tags?: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // 共通的な位置とメニューの型

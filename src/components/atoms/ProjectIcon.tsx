@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface ProjectIconProps {
-  size?: number;
-  className?: string;
-  strokeless?: boolean;
-}
+import { ProjectIconProps } from '../../types/components';
 
 const ProjectIcon: React.FC<ProjectIconProps> = ({ 
   size = 24, 

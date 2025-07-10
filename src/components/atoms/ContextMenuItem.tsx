@@ -1,13 +1,6 @@
 import React from 'react';
+import { ContextMenuItemProps } from '../../types/components';
 import { LucideIcon } from 'lucide-react';
-
-interface ContextMenuItemProps {
-  onClick: () => void;
-  children: React.ReactNode;
-  icon?: LucideIcon;
-  disabled?: boolean;
-  className?: string;
-}
 
 const ContextMenuItem: React.FC<ContextMenuItemProps> = ({
   onClick,

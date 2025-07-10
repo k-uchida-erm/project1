@@ -1,6 +1,7 @@
 import React from 'react';
 import { Message } from '../../types';
 import { MessageBubbleProps } from '../../types/components';
+import MarkdownRenderer from './MarkdownRenderer';
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLastInGroup = false }) => {
   return (
@@ -13,7 +14,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isLastInGroup = 
         }`}
         style={message.isUser ? { boxShadow: '0 4px 12px rgba(0,0,0,0.04)' } : {}}
       >
-        {message.content}
+        <MarkdownRenderer content={message.content} />
       </div>
     </div>
   );
